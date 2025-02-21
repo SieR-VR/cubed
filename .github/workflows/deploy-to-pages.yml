@@ -1,6 +1,10 @@
 # This workflow is used to deploy the project to GitHub Pages.
 name: Deploy to Pages
 
+permissions:
+  id-token: write
+  pages: write
+
 on:
   push:
     branches:
