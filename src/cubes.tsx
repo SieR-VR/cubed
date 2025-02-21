@@ -102,8 +102,6 @@ export function Cubes() {
     const xIndex = clip(Math.ceil(x) + size / 2 - 1, 0, size - 1);
     const yIndex = clip(Math.ceil(y) + size / 2 - 1, 0, size - 1);
 
-    console.log(xIndex, yIndex);
-
     dragging.current = true;
     setDragStart([xIndex, yIndex]);
   }, []);

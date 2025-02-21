@@ -98,6 +98,8 @@ export type Side = "Z+" | "Z-" | "X+" | "X-" | "Y+" | "Y-"
 export type Point2D = [number, number];
 
 export interface CubedState {
+  score: number;
+
   size: number;
   cubes: SingleCubeProp[][][]
 
@@ -113,6 +115,7 @@ export interface SingleCubeProp {
 }
 
 export const cubedState = proxy<CubedState>({
+  score: 0,
   size: 0,
   cubes: [],
   currentSide: "Z+"
@@ -142,7 +145,6 @@ export const cubedActions = {
 
     cubedState.currentSide = nextSide;
 
-    console.log(nextSide);
     return nextSide;
   },
 
@@ -192,9 +194,7 @@ export const cubedActions = {
         cube.removed = true;
       });
 
-      console.log(selectedCubes);
-    } else {
-      console.log(sum, selectedCubes);
+      cubedState.score += selectedCubes.length;
     }
 
     cubedActions.recalculateExposed();
