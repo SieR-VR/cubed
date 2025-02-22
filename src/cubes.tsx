@@ -21,13 +21,13 @@ function clip(value: number, min: number, max: number) {
 
 export function Cubes() {
   const { viewport, gl, camera } = useThree();
-  const { size, cubes, currentSide, end } = useCubedState();
+  const { size, cubes, currentSide, end, rotateAction } = useCubedState();
 
-  const [rotateAction, setRotateAction] = useState<boolean>(false);
   const [dragStart, setDragStart] = useState<[number, number] | null>(null);
 
   const currentRotateTime = useRef(0);
   const prevEnd = useRef(false);
+
   const dragging = useRef<boolean>(false);
   const lerp = useRef<[Quaternion, Quaternion] | null>(null);
 
@@ -59,7 +59,7 @@ export function Cubes() {
 
         currentRotateTime.current = 0;
         lerp.current = null;
-        setRotateAction(false);
+        cubedActions.setRotateAction(false);
       }
     }
   });
@@ -76,7 +76,6 @@ export function Cubes() {
 
     if (!end) return;
 
-    // 회전 속도 조절
     const speed = 0.3;
     const rotation = cubeGroupRef.current.rotation;
     rotation.y += speed * delta;
@@ -98,8 +97,6 @@ export function Cubes() {
     } else if (event.key === "ArrowRight") {
       cubedActions.rotate("right");
     }
-
-    setRotateAction(true);
   }, [rotateAction]);
 
   const onDragStart = useCallback((event: PointerEvent) => {

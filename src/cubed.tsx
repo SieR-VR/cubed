@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { Stats, OrthographicCamera } from "@react-three/drei";
 import * as THREE from "three";
 
@@ -7,6 +7,7 @@ import { cubedActions, useCubedState } from "../hooks/cubed";
 import { Cubes } from "./cubes";
 import { Timer } from "./timer";
 import { Result } from "./result";
+import { DirectionPad } from "./direction-pad";
 
 export function Cubed() {
   const { score, end } = useCubedState();
@@ -33,7 +34,17 @@ export function Cubed() {
 
   return (
     <>
-      <Canvas color="black">
+      <Canvas
+        color="black"
+        style={{
+          touchAction: "none",
+          WebkitTouchCallout: "none",
+          WebkitUserSelect: "none",
+          width: "100vw",
+          height: "100vh",
+        }}
+        draggable={false}
+      >
         <color attach="background" args={["black"]} />
         <ambientLight intensity={Math.PI / 2} />
         <directionalLight position={[10, 10, 10]} intensity={1} />
@@ -68,6 +79,7 @@ export function Cubed() {
       </div>
       <Timer />
       {end && <Result />}
+      <DirectionPad />
     </>
   );
 }

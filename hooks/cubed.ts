@@ -108,7 +108,8 @@ export interface CubedState {
   size: number;
   cubes: SingleCubeProp[][][]
 
-  currentSide: Side
+  currentSide: Side,
+  rotateAction: boolean
 }
 
 export interface SingleCubeProp {
@@ -132,6 +133,8 @@ export const cubedState = proxy<CubedState>({
 
   currentSide: "Z+",
   timeLimit: 0,
+
+  rotateAction: false,
 });
 
 export const cubedActions = {
@@ -173,6 +176,7 @@ export const cubedActions = {
     const nextSide = getNextSide(currentSide, action);
 
     cubedState.currentSide = nextSide;
+    cubedState.rotateAction = true;
 
     return nextSide;
   },
@@ -264,6 +268,10 @@ export const cubedActions = {
         }
       }
     });
+  },
+
+  setRotateAction(action: boolean) {
+    cubedState.rotateAction = action;
   }
 }
 
