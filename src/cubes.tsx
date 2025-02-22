@@ -88,13 +88,13 @@ export function Cubes() {
     if (!cubeGroupRef.current) return;
     if (rotateAction) return;
 
-    if (event.key === "ArrowUp") {
+    if (event.key === "ArrowUp" || event.key === "w") {
       cubedActions.rotate("up");
-    } else if (event.key === "ArrowDown") {
+    } else if (event.key === "ArrowDown" || event.key === "s") {
       cubedActions.rotate("down");
-    } else if (event.key === "ArrowLeft") {
+    } else if (event.key === "ArrowLeft" || event.key === "a") {
       cubedActions.rotate("left");
-    } else if (event.key === "ArrowRight") {
+    } else if (event.key === "ArrowRight" || event.key === "d") {
       cubedActions.rotate("right");
     }
   }, [rotateAction]);
