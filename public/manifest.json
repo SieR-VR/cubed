@@ -1,0 +1,16 @@
+{
+  "name": "cubed",
+  "short_name": "cubed",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "1016x1016",
+      "type": "image/png"
+    }
+  ]
+}
