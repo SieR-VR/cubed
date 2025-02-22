@@ -152,6 +152,8 @@ export const cubedActions = {
     cubedState.end = false;
     cubedState.start = new Date();
     cubedState.timeLimit = 150;
+    cubedState.score = 0;
+    cubedState.currentSide = "Z+";
 
     cubedState.scene = "game";
   },
