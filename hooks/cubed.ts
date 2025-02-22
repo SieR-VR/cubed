@@ -98,7 +98,12 @@ export type Side = "Z+" | "Z-" | "X+" | "X-" | "Y+" | "Y-"
 export type Point2D = [number, number];
 
 export interface CubedState {
+  scene: "title" | "game"
+  end: boolean;
   score: number;
+
+  start: Date;
+  timeLimit: number;
 
   size: number;
   cubes: SingleCubeProp[][][]
@@ -108,6 +113,7 @@ export interface CubedState {
 
 export interface SingleCubeProp {
   number: keyof typeof ColorTable;
+
   coordinate: [number, number, number];
   exposed: Set<Side>;
 
@@ -115,16 +121,21 @@ export interface SingleCubeProp {
 }
 
 export const cubedState = proxy<CubedState>({
+  scene: "title",
+  end: false,
+
   score: 0,
+  start: new Date(),
+
   size: 0,
   cubes: [],
-  currentSide: "Z+"
+
+  currentSide: "Z+",
+  timeLimit: 0,
 });
 
 export const cubedActions = {
   initGameState(size: number) {
-    const halfSize = size / 2;
-
     cubedState.size = size;
     cubedState.cubes =
       Array.from({ length: size }).map((_, x) =>
@@ -137,9 +148,25 @@ export const cubedActions = {
           }))
         )
       )
+
+    cubedState.end = false;
+    cubedState.start = new Date();
+    cubedState.timeLimit = 150;
+
+    cubedState.scene = "game";
+  },
+
+  endGame() {
+    cubedState.end = true;
+  },
+
+  goTitle() {
+    cubedState.scene = "title";
   },
 
   rotate(action: RotateAction): Side {
+    if (cubedState.end) return cubedState.currentSide;
+
     const currentSide = cubedState.currentSide;
     const nextSide = getNextSide(currentSide, action);
 
@@ -149,6 +176,8 @@ export const cubedActions = {
   },
 
   removeCube(rect: [Point2D, Point2D]) {
+    if (cubedState.end) return;
+
     const forward = Array.from({ length: cubedState.size }).map((_, i) => i);
     const backward = [...forward].reverse();
 
@@ -201,6 +230,8 @@ export const cubedActions = {
   },
 
   recalculateExposed() {
+    if (cubedState.end) return;
+
     const forward = Array.from({ length: cubedState.size }).map((_, i) => i);
     const backward = [...forward].reverse();
 

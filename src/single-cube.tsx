@@ -1,9 +1,16 @@
 import { Text } from "@react-three/drei";
-import { useCubedState, Side, SingleCubeProp, ColorTable } from "../hooks/cubed";
+import {
+  useCubedState,
+  Side,
+  SingleCubeProp,
+  ColorTable,
+} from "../hooks/cubed";
 
 type Props = {
-  readonly [K in keyof SingleCubeProp]: SingleCubeProp[K]
-}
+  [K in keyof SingleCubeProp]: SingleCubeProp[K] extends Array<infer T>
+    ? readonly T[]
+    : SingleCubeProp[K];
+};
 
 const SidePositionMap: Record<Side, [number, number, number]> = {
   "X+": [+0.51, 0, 0],
@@ -12,7 +19,7 @@ const SidePositionMap: Record<Side, [number, number, number]> = {
   "Y-": [0, -0.51, 0],
   "Z+": [0, 0, 0.51],
   "Z-": [0, 0, -0.51],
-}
+};
 
 const SideRotationMap: Record<Side, [number, number, number]> = {
   "X+": [0, Math.PI / 2, 0],
@@ -21,7 +28,7 @@ const SideRotationMap: Record<Side, [number, number, number]> = {
   "Y-": [Math.PI / 2, 0, 0],
   "Z+": [0, 0, 0],
   "Z-": [0, Math.PI, 0],
-}
+};
 
 export function SingleCube({ number, coordinate, exposed, removed }: Props) {
   const { size } = useCubedState();
@@ -36,7 +43,15 @@ export function SingleCube({ number, coordinate, exposed, removed }: Props) {
         <meshStandardMaterial color={ColorTable[number]} />
       </mesh>
       {Array.from(exposed).map((side) => (
-        <Text color="white" anchorX="center" anchorY="middle" fontSize={0.5} position={SidePositionMap[side]} rotation={SideRotationMap[side]}>
+        <Text
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+          fontSize={0.5}
+          position={SidePositionMap[side]}
+          rotation={SideRotationMap[side]}
+          key={side}
+        >
           {number}
         </Text>
       ))}

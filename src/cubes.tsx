@@ -21,12 +21,13 @@ function clip(value: number, min: number, max: number) {
 
 export function Cubes() {
   const { viewport, gl, camera } = useThree();
-  const { size, cubes, currentSide } = useCubedState();
+  const { size, cubes, currentSide, end } = useCubedState();
 
   const [rotateAction, setRotateAction] = useState<boolean>(false);
   const [dragStart, setDragStart] = useState<[number, number] | null>(null);
 
   const currentRotateTime = useRef(0);
+  const prevEnd = useRef(false);
   const dragging = useRef<boolean>(false);
   const lerp = useRef<[Quaternion, Quaternion] | null>(null);
 
@@ -61,6 +62,27 @@ export function Cubes() {
         setRotateAction(false);
       }
     }
+  });
+
+  useFrame((_, delta) => {
+    if (!cubeGroupRef.current) return;
+
+    if (prevEnd.current === true && end === false) {
+      cubeGroupRef.current.quaternion.copy(SideLookup[currentSide]);
+      prevEnd.current = end;
+
+      return;
+    }
+
+    if (!end) return;
+
+    // 회전 속도 조절
+    const speed = 0.3;
+    const rotation = cubeGroupRef.current.rotation;
+    rotation.y += speed * delta;
+    cubeGroupRef.current.rotation.copy(rotation);
+
+    prevEnd.current = end;
   });
 
   const onArrowKeyDown = useCallback((event: KeyboardEvent) => {
@@ -157,12 +179,10 @@ export function Cubes() {
   }, [onArrowKeyDown, onDragStart, onDragEnd]);
 
   return (
-    <>
-      <group ref={cubeGroupRef}>
-        {cubes.map((plane) =>
-          plane.map((line) => line.map((cube) => <SingleCube {...cube} />))
-        )}
-      </group>
-    </>
+    <group ref={cubeGroupRef}>
+      {cubes.map((plane) =>
+        plane.map((line) => line.map((cube) => <SingleCube {...cube} key={cube.coordinate.join(",")} />))
+      )}
+    </group>
   );
 }
