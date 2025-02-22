@@ -1,7 +1,7 @@
 {
   "name": "cubed",
   "short_name": "cubed",
-  "start_url": "/",
+  "start_url": "/cubed",
   "display": "fullscreen",
   "orientation": "landscape",
   "background_color": "#000000",
